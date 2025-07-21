@@ -2,27 +2,27 @@ version: '3.8'
 
 services:
   postgres:
-    image: postgres:13-alpine
+    image: postgres:15-alpine
+    container_name: banco-postgres
     environment:
+      POSTGRES_DB: bank
       POSTGRES_USER: ${USER}
       POSTGRES_PASSWORD: ${PASS}
-      POSTGRES_DB: jdbc:postgresql://${URL}
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
   rabbitmq:
-    image: rabbitmq:3-management-alpine
-    environment:
-      RABBITMQ_DEFAULT_USER: bankuser
-      RABBITMQ_DEFAULT_PASS: securepassword
+    image: rabbitmq:3-management
+    container_name: banco-rabbitmq
     ports:
-      - "5672:5672"
+      - "5672:5672"    # AMQP
       - "15672:15672"
 
   prometheus:
     image: prom/prometheus
+    container_name: banco-prometheus
     ports:
       - "9090:9090"
     volumes:
@@ -30,8 +30,11 @@ services:
 
   grafana:
     image: grafana/grafana
+    container_name: banco-grafana
     ports:
       - "3000:3000"
+    depends_on:
+      - prometheus
 
 volumes:
   postgres_data:
