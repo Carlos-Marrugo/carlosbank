@@ -34,5 +34,8 @@ public class Cuenta {
     @Column(name = "fecha_creacion")
     private LocalDateTime fechaCreacion = LocalDateTime.now();
 
+    public void actualizarSaldo(BigDecimal monto, boolean esDeposito) {
+        this.saldo = esDeposito ? saldo.add(monto) : saldo.subtract(monto);
+    }
 
 }
