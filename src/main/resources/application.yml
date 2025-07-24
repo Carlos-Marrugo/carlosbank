@@ -6,12 +6,16 @@ spring:
     url: jdbc:postgresql://${URL}
     username: ${USER}
     password: ${PASS}
+    jwt-secret: ${JWT_SECRET:defaultSecret}
+    jwt-expiration: ${JWT_EXPIRATION:3600000}
     driver-class-name: org.postgresql.Driver
     hikari:
       connection-timeout: 30000
       maximum-pool-size: 5
       idle-timeout: 10000
       max-lifetime: 30000
+
+  app:
 
   jpa:
     hibernate:
