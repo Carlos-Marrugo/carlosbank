@@ -21,14 +21,14 @@ public class DataInitializer {
     @PostConstruct
     public void init() {
         // Crear ADMIN (opcional)
-
+    /*
         Usuario admin = new Usuario();
         admin.setUsername("carlos.dev");
 
 
         admin.setPassword(passwordEncoder.encode("carlos123"));
 
-        usuarioRepository.save(admin);
+        usuarioRepository.save(admin);*/
 
     }
 }
