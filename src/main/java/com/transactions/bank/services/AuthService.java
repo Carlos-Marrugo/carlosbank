@@ -2,9 +2,9 @@ package com.transactions.bank.services;
 
 import com.transactions.bank.config.JwtTokenProvider;
 import com.transactions.bank.domain.Usuario;
-import com.transactions.bank.dto.request.AuthRequest;
-import com.transactions.bank.dto.response.AuthResponse;
-import com.transactions.bank.dto.request.UsuarioRequest;
+import com.transactions.bank.dto.AuthRequest;
+import com.transactions.bank.dto.AuthResponse;
+import com.transactions.bank.dto.UsuarioRequest;
 import com.transactions.bank.adapters.persistence.UsuarioRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

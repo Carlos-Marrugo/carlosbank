@@ -1,8 +1,8 @@
 package com.transactions.bank.adapters.web;
 
-import com.transactions.bank.dto.request.AuthRequest;
-import com.transactions.bank.dto.response.AuthResponse;
-import com.transactions.bank.dto.request.UsuarioRequest;
+import com.transactions.bank.dto.AuthRequest;
+import com.transactions.bank.dto.AuthResponse;
+import com.transactions.bank.dto.UsuarioRequest;
 import com.transactions.bank.services.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;

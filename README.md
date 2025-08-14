@@ -1,8 +1,8 @@
 # Sistema de Procesamiento de Transacciones Bancarias
 
-![Java](https://img.shields.io/badge/Java-17+-orange)
-![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-green)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-blue)
+![Java](https://img.shields.io/badge/Java-21+-orange)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.3-green)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue)
 ![RabbitMQ](https://img.shields.io/badge/RabbitMQ-3.9-yellow)
 ![Docker](https://img.shields.io/badge/Docker-20.10-blue)
 ![License](https://img.shields.io/badge/License-MIT-blue)
