@@ -10,12 +10,13 @@ import java.math.BigDecimal;
 @Data
 public class TransaccionRequest {
     @NotNull(message = "El tipo de transaccion es obligatorio")
-    private TipoTransaccion tipoTransaccion;
+    private TipoTransaccion tipo;
 
     @Positive(message = "El monto debe ser mayor a cero")
     private BigDecimal monto;
 
     private Long cuentaOrigenId;
     private Long cuentaDestinoId;
+
 
 }

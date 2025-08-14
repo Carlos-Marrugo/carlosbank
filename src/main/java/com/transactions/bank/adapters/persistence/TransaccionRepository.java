@@ -2,8 +2,24 @@ package com.transactions.bank.adapters.persistence;
 
 import com.transactions.bank.domain.Transaccion;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Repository
 public interface TransaccionRepository extends JpaRepository<Transaccion, Long> {
+
+    @Query("SELECT COALESCE(SUM(t.monto), 0) FROM Transaccion t " +
+            "WHERE t.cuentaOrigen.id = :cuentaId " +
+            "AND t.fecha BETWEEN :inicio AND :fin " +
+            "AND t.estado = 'COMPLETADA'")
+    BigDecimal sumMontoByCuentaAndFecha(
+            @Param("cuentaId") Long cuentaId,
+            @Param("inicio") LocalDateTime inicio,
+            @Param("fin") LocalDateTime fin
+    );
+
 }
