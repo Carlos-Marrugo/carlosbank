@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class CuentaService {
 
@@ -46,6 +49,20 @@ public class CuentaService {
 
         return convertirAResponse(cuenta);
     }
+
+
+    public List<CuentaResponse> listarTodasLasCuentas() {
+        return cuentaRepository.findAll().stream()
+                .map(this::convertirAResponse)
+                .collect(Collectors.toList());
+    }
+
+    public CuentaResponse obtenerCuentaPorId(Long id) {
+        Cuenta cuenta = cuentaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("No existe el cuenta con el id: " + id));
+        return  convertirAResponse(cuenta);
+    }
+
 
 
 }
