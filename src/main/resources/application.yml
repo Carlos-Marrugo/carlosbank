@@ -25,13 +25,16 @@ spring:
     password: guest
     connection-timeout: 5000
     template:
+      exchange: transactions.exchange
+      routing-key: transactions.routing.key
       retry:
         enabled: true
         initial-interval: 1000ms
         max-interval: 10000ms
         max-attempts: 3
-    queue:
-      transactions: transacciones.queue
+    listener:
+      simple:
+        acknowledge-mode: auto
 
   security:
     oauth2:

@@ -60,8 +60,8 @@ public class AuthService {
         String token = jwtTokenProvider.generarToken(authentication);
 
         return new AuthResponse(
-                "Autenticación exitosa",
-                token
+                token,
+                "Atenticacion exitosa"
         );
     }
 }
