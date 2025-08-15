@@ -30,6 +30,8 @@ spring:
         initial-interval: 1000ms
         max-interval: 10000ms
         max-attempts: 3
+    queue:
+      transactions: transacciones.queue
 
   security:
     oauth2:

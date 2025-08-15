@@ -22,16 +22,20 @@ public class TransaccionService {
     private final CuentaRepository cuentaRepository;
     private final RabbitTemplate rabbitTemplate;
 
-    @Value("${rabbitmq.queue.transactions}")
-    private String queueName;
+    public TransaccionService(
+            TransaccionRepository transaccionRepository,
+            CuentaRepository cuentaRepository,
+            RabbitTemplate rabbitTemplate) {
 
-    public TransaccionService(TransaccionRepository transaccionRepository,
-                              CuentaRepository cuentaRepository,
-                              RabbitTemplate rabbitTemplate) {
         this.transaccionRepository = transaccionRepository;
         this.cuentaRepository = cuentaRepository;
         this.rabbitTemplate = rabbitTemplate;
     }
+
+    /*@Value("${rabbitmq.queue.transactions}")
+    private String queueName;*/
+
+
 
     @Transactional
     public TransaccionResponse iniciarTransaccion(TransaccionRequest request) {
@@ -40,7 +44,7 @@ public class TransaccionService {
         Transaccion transaccion = crearTransaccionPendiente(request);
         transaccionRepository.save(transaccion);
 
-        rabbitTemplate.convertAndSend(queueName, transaccion.getId());
+        //rabbitTemplate.convertAndSend(queueName, transaccion.getId());
 
         return convertirAResponse(transaccion);
     }
