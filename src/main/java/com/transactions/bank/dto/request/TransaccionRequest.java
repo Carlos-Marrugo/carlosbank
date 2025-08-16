@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Positive;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Data
 public class TransaccionRequest {
@@ -14,6 +15,7 @@ public class TransaccionRequest {
 
     @Positive(message = "El monto debe ser mayor a cero")
     private BigDecimal monto;
+    private LocalDateTime fecha;
 
     private Long cuentaOrigenId;
     private Long cuentaDestinoId;

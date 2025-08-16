@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TransaccionService {
@@ -47,6 +49,19 @@ public class TransaccionService {
         rabbitTemplate.convertAndSend(exchangeName, routingKey, transaccion.getId());
 
         return convertirAResponse(transaccion);
+    }
+
+    public TransaccionResponse obtenerTransaccionPorId(Long id) {
+        Transaccion transaccion = transaccionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Transaccion no encontrada"));
+        return convertirAResponse(transaccion);
+    }
+
+    public List<TransaccionResponse> obtenerTransaccionesPorCuenta(Long cuentaId) {
+        return transaccionRepository.findTransactionsByAccountId(cuentaId)
+                .stream()
+                .map(this::convertirAResponse)
+                .collect(Collectors.toList());
     }
 
     private void validarTransaccion(TransaccionRequest request) {

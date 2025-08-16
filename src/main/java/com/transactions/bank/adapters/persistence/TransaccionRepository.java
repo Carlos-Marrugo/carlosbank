@@ -8,9 +8,13 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Repository
 public interface TransaccionRepository extends JpaRepository<Transaccion, Long> {
+
+    @Query("SELECT t FROM Transaccion t WHERE t.cuentaOrigen.id = :cuentaId OR t.cuentaDestino.id = :cuentaId")
+    List<Transaccion> findTransactionsByAccountId(@Param("cuentaId") Long cuentaId);
 
     @Query("SELECT COALESCE(SUM(t.monto), 0) FROM Transaccion t " +
             "WHERE t.cuentaOrigen.id = :cuentaId " +
@@ -21,5 +25,4 @@ public interface TransaccionRepository extends JpaRepository<Transaccion, Long> 
             @Param("inicio") LocalDateTime inicio,
             @Param("fin") LocalDateTime fin
     );
-
 }
