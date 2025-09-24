@@ -1,7 +1,8 @@
 package com.transactions.bank.config;
 
-import com.transactions.bank.adapters.persistence.UsuarioRepository;
-import com.transactions.bank.domain.Usuario;
+import com.transactions.bank.domain.model.Usuario;
+import com.transactions.bank.infrastructure.persistence.UsuarioRepository;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

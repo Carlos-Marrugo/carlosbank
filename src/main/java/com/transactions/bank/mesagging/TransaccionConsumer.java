@@ -1,11 +1,12 @@
 package com.transactions.bank.mesagging;
 
-import com.transactions.bank.adapters.persistence.CuentaRepository;
-import com.transactions.bank.adapters.persistence.TransaccionRepository;
 import com.transactions.bank.config.RabbitMQConfig;
-import com.transactions.bank.domain.Cuenta;
-import com.transactions.bank.domain.EstadoTransaccion;
-import com.transactions.bank.domain.Transaccion;
+import com.transactions.bank.domain.model.Cuenta;
+import com.transactions.bank.domain.model.EstadoTransaccion;
+import com.transactions.bank.domain.model.Transaccion;
+import com.transactions.bank.infrastructure.persistence.CuentaRepository;
+import com.transactions.bank.infrastructure.persistence.TransaccionRepository;
+
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
