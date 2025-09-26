@@ -1,4 +1,4 @@
-package com.transactions.bank.config;
+package com.transactions.bank.infrastructure.config;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

@@ -1,4 +1,4 @@
-package com.transactions.bank.config;
+package com.transactions.bank.infrastructure.config;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;

@@ -1,4 +1,4 @@
-package com.transactions.bank.config;
+package com.transactions.bank.infrastructure.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

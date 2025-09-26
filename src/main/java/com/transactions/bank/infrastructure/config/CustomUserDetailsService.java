@@ -1,4 +1,4 @@
-package com.transactions.bank.config;
+package com.transactions.bank.infrastructure.config;
 
 import com.transactions.bank.domain.model.Usuario;
 import com.transactions.bank.infrastructure.persistence.UsuarioRepository;

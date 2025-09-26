@@ -1,9 +1,9 @@
-package com.transactions.bank.mesagging;
+package com.transactions.bank.infrastructure.mesagging;
 
-import com.transactions.bank.config.RabbitMQConfig;
 import com.transactions.bank.domain.model.Cuenta;
 import com.transactions.bank.domain.model.EstadoTransaccion;
 import com.transactions.bank.domain.model.Transaccion;
+import com.transactions.bank.infrastructure.config.RabbitMQConfig;
 import com.transactions.bank.infrastructure.persistence.CuentaRepository;
 import com.transactions.bank.infrastructure.persistence.TransaccionRepository;
 
