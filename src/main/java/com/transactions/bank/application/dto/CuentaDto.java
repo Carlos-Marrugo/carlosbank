@@ -1,18 +1,16 @@
-package com.transactions.bank.application.dto.request;
-
+package com.transactions.bank.application.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-
-public class CuentaRequest {
-   private Long id;
+public class CuentaDto {
+    private Long id;
     private String numeroCuenta;
     private String propietario;
     private BigDecimal saldo;
     private LocalDateTime fechaCreacion;
 
-    public CuentaRequest() {}
+    public CuentaDto() {}
 
     public Long getId() {
         return id;
@@ -54,7 +52,7 @@ public class CuentaRequest {
         this.fechaCreacion = fechaCreacion;
     }
 
-    public CuentaRequest(Long id, String numeroCuenta, String propietario, BigDecimal saldo, LocalDateTime fechaCreacion) {
+    public CuentaDto(Long id, String numeroCuenta, String propietario, BigDecimal saldo, LocalDateTime fechaCreacion) {
         this.id = id;
         this.numeroCuenta = numeroCuenta;
         this.propietario = propietario;
@@ -62,4 +60,5 @@ public class CuentaRequest {
         this.fechaCreacion = fechaCreacion;
     }
 
+    
 }

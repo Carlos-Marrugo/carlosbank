@@ -2,25 +2,48 @@ package com.transactions.bank.application.services;
 
 import com.transactions.bank.application.dto.request.CuentaRequest;
 import com.transactions.bank.application.dto.response.CuentaResponse;
+import com.transactions.bank.application.port.in.CuentaUseCase;
+import com.transactions.bank.application.port.out.CuentaRepositoryPort;
 import com.transactions.bank.domain.exceptions.CuentaExisteException;
 import com.transactions.bank.domain.model.Cuenta;
-import com.transactions.bank.infrastructure.persistence.CuentaRepository;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class CuentaService {
+@Transactional
+public class CuentaService implements CuentaUseCase{
 
     @Autowired
-    private CuentaRepository cuentaRepository;
+    private CuentaRepositoryPort cuentaRepositoryPort;
 
-    public CuentaService(CuentaRepository cuentaRepository) {
-        this.cuentaRepository = cuentaRepository;
+    @Override
+    public CuentaRequest crearCuenta(CuentaRequest cuentaDto) {
+        if (cuentaRepositoryPort.findByNumeroCuenta(cuentaDto.getNumeroCuenta()).isPresent()) {
+            throw new CuentaExisteException("La cuenta ya existe: " + cuentaDto.getNumeroCuenta());
+        }
+
+        Cuenta cuenta = new Cuenta();
+        cuenta.setNumeroCuenta(cuentaDto.getNumeroCuenta());
+        cuenta.setPropietario(cuentaDto.getPropietario());
+        cuenta.setSaldo(cuentaDto.getSaldo());
+        cuenta.setFechaCreacion(LocalDateTime.now());
+
+        Cuenta cuentaGuardada = cuentaRepositoryPort.save(cuenta);
+
+        return convertirADto(cuentaGuardada);
+    }
+
+    @Override
+    public List<CuentaRequest> listarTodasLasCuentas() {
+        return cuentaRepositoryPort.findAll().stream()
+                .map(this::convertirADto)
+                .collect(Collectors.toList());
     }
 
     private CuentaResponse convertirAResponse(Cuenta cuenta) {
@@ -33,36 +56,20 @@ public class CuentaService {
         );
     }
 
-    @Transactional
-    public CuentaResponse crearCuenta(CuentaRequest request) {
-        if(cuentaRepository.findByNumeroCuenta(request.getNumeroCuenta())!=null){
-            throw new CuentaExisteException("Esta cuenta ya esta registrada!");
-        }
-
-        Cuenta cuenta = Cuenta.builder()
-                .numeroCuenta(request.getNumeroCuenta())
-                .propietario(request.getPropietario())
-                .saldo(request.getSaldo())
-                .build();
-
-        cuentaRepository.save(cuenta);
-
-        return convertirAResponse(cuenta);
+    @Override
+    public CuentaRequest obtenerCuentaPorId(Long id) {
+        Cuenta cuenta = cuentaRepositoryPort.findById(id)
+                .orElseThrow(() -> new RuntimeException("Cuenta no encontrada: " + id));
+        return convertirADto(cuenta);
     }
 
-
-    public List<CuentaResponse> listarTodasLasCuentas() {
-        return cuentaRepository.findAll().stream()
-                .map(this::convertirAResponse)
-                .collect(Collectors.toList());
+    private CuentaRequest convertirADto(Cuenta cuenta) {
+        return new CuentaRequest(
+                cuenta.getId(),
+                cuenta.getNumeroCuenta(),
+                cuenta.getPropietario(),
+                cuenta.getSaldo(),
+                cuenta.getFechaCreacion()
+        );
     }
-
-    public CuentaResponse obtenerCuentaPorId(Long id) {
-        Cuenta cuenta = cuentaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("No existe el cuenta con el id: " + id));
-        return  convertirAResponse(cuenta);
-    }
-
-
-
 }
