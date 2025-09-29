@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/cuentas")
@@ -24,29 +25,33 @@ public class CuentaController {
         this.cuentaUseCase = cuentaUseCase;
     }
 
-
     @PostMapping
     public ResponseEntity<CuentaResponse> crearCuenta(@Valid @RequestBody CuentaRequest request) {
         CuentaDto cuentaDto = new CuentaDto();
         cuentaDto.setNumeroCuenta(request.getNumeroCuenta());
+        cuentaDto.setPropietario(request.getPropietario());
         cuentaDto.setSaldo(request.getSaldoInicial());
 
-        CuentaDto saveDto = new cuentaUserCase.crearCuenta(cuentaDto);
-        CuentaResponse response = toResponse(saveDto);
-
+        CuentaDto savedDto = cuentaUseCase.crearCuenta(cuentaDto);
+        CuentaResponse response = toResponse(savedDto);
+        
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping
     public ResponseEntity<List<CuentaResponse>> listarCuentas() {
-        List<CuentaResponse> cuentas = cuentaService.listarTodasLasCuentas();
-        return ResponseEntity.ok(cuentas);
+        List<CuentaDto> cuentas = cuentaUseCase.listarTodasLasCuentas();
+        List<CuentaResponse> responses = cuentas.stream()
+                .map(this::toResponse)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(responses);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<CuentaResponse> obtenerCuenta(@PathVariable Long id) {
-        CuentaResponse cuenta = cuentaService.obtenerCuentaPorId(id);
-        return ResponseEntity.ok(cuenta);
+        CuentaDto cuenta = cuentaUseCase.obtenerCuentaPorId(id);
+        CuentaResponse response = toResponse(cuenta);
+        return ResponseEntity.ok(response);
     }
 
     private CuentaResponse toResponse(CuentaDto dto) {
@@ -58,5 +63,4 @@ public class CuentaController {
             dto.getFechaCreacion()
         );
     }
-
 }
