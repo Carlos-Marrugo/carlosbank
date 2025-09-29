@@ -2,6 +2,7 @@ package com.transactions.bank.infrastructure.persistence.adapters;
 
 import com.transactions.bank.application.port.out.CuentaRepositoryPort;
 import com.transactions.bank.domain.model.Cuenta;
+import com.transactions.bank.infrastructure.persistence.jpa.CuentaJpaRepository;
 import com.transactions.bank.infrastructure.persistence.mapper.CuentaMapper;
 import org.springframework.stereotype.Repository;
 
