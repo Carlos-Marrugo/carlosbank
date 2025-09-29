@@ -31,7 +31,7 @@ public class CuentaService implements CuentaUseCase{
         Cuenta cuenta = new Cuenta();
         cuenta.setNumeroCuenta(cuentaDto.getNumeroCuenta());
         cuenta.setPropietario(cuentaDto.getPropietario());
-        cuenta.setSaldo(cuentaDto.getSaldo());
+        cuenta.setSaldo(cuentaDto.getSaldoInicial());
         cuenta.setFechaCreacion(LocalDateTime.now());
 
         Cuenta cuentaGuardada = cuentaRepositoryPort.save(cuenta);

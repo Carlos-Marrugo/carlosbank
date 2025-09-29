@@ -1,18 +1,29 @@
-package com.transactions.bank.application.dto.request;
+package com.transactions.bank.infrastructure.persistence.entity;
 
-
+import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "cuentas")
+public class CuentaEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-public class CuentaRequest {
-   private Long id;
+    @Column(unique = true, nullable = false)
     private String numeroCuenta;
+
+    @Column(nullable = false)
     private String propietario;
-    private BigDecimal saldoInicial;
+
+    @Column(nullable = false)
+    private BigDecimal saldo;
+
+    @Column(name = "fecha_creacion")
     private LocalDateTime fechaCreacion;
 
-    public CuentaRequest() {}
+    public CuentaEntity() {}
 
     public Long getId() {
         return id;
@@ -38,12 +49,12 @@ public class CuentaRequest {
         this.propietario = propietario;
     }
 
-    public BigDecimal getSaldoInicial() {
-        return saldoInicial;
+    public BigDecimal getSaldo() {
+        return saldo;
     }
 
-    public void setSaldoInicial(BigDecimal saldoInicial) {
-        this.saldoInicial = saldoInicial;
+    public void setSaldo(BigDecimal saldo) {
+        this.saldo = saldo;
     }
 
     public LocalDateTime getFechaCreacion() {
@@ -54,12 +65,5 @@ public class CuentaRequest {
         this.fechaCreacion = fechaCreacion;
     }
 
-    public CuentaRequest(Long id, String numeroCuenta, String propietario, BigDecimal saldo, LocalDateTime fechaCreacion) {
-        this.id = id;
-        this.numeroCuenta = numeroCuenta;
-        this.propietario = propietario;
-        this.saldoInicial = saldoInicial;
-        this.fechaCreacion = fechaCreacion;
-    }
-
+    
 }
