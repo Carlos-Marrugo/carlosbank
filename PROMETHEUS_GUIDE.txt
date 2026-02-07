@@ -1,0 +1,233 @@
+GUIA PROMETHEUS - MONITOREO DE METRICAS
+======================================
+
+¿QUE ES PROMETHEUS?
+===================
+Prometheus es una herramienta que:
+1. Recolecta métricas de tu aplicación (requests, memoria, CPU, etc)
+2. Las guarda en una base de datos de series temporales
+3. Te permite hacer consultas para ver qué pasó en tu app
+
+En simple: Es un registro histórico de todo lo que pasó en tu aplicación.
+
+========================================
+COMO ACCEDER
+========================================
+
+URL: http://localhost:9090
+
+Abre en el navegador y verás una interfaz con:
+- Un campo de búsqueda para consultas
+- Gráficos de métricas
+- Historial de queries
+
+========================================
+METRICAS DISPONIBLES DE TU APP SPRING BOOT
+========================================
+
+Tu aplicación Spring Boot automáticamente expone estas métricas:
+
+1. HTTP REQUESTS (lo más importante)
+   - http_requests_total                → Total de requests recibidas
+   - http_request_duration_seconds      → Tiempo que tarda cada request
+   - http_requests_currently_active     → Requests activos en este momento
+
+2. MEMORIA (RAM que usa la app)
+   - jvm_memory_used_bytes              → Bytes de memoria usada
+   - jvm_memory_max_bytes               → Máximo de memoria disponible
+   - jvm_memory_committed_bytes         → Memoria asignada
+
+3. CPU (Procesador)
+   - process_cpu_usage                  → % de CPU que usa la app
+   - process_system_cpu_usage           → % de CPU del sistema total
+
+4. DATABASE (Conexiones a Neon PostgreSQL)
+   - hikaricp_connections               → Conexiones activas a DB
+   - hikaricp_connections_idle          → Conexiones libres
+
+5. RABBITMQ (Mensajes)
+   Para esto necesitarías instrumentación específica
+
+========================================
+COMO USAR PROMETHEUS - PASO A PASO
+========================================
+
+PASO 1: Abre http://localhost:9090
+
+PASO 2: En el campo "Expression" escribe una métrica
+
+PASO 3: Click en "Execute" o Enter
+
+EJEMPLO 1: Ver TOTAL DE REQUESTS
+=================================
+En el campo Expression escribe:
+  http_requests_total
+
+Click Execute.
+
+Ves algo como:
+  http_requests_total{exception="None",method="POST",outcome="SUCCESS",status="201",uri="/api/usuarios",} 2
+  http_requests_total{exception="None",method="GET",outcome="SUCCESS",status="200",uri="/api/cuentas",} 5
+
+Significa:
+- 2 requests POST a /api/usuarios con status 201 ✅
+- 5 requests GET a /api/cuentas con status 200 ✅
+
+EJEMPLO 2: Ver TIEMPO PROMEDIO DE REQUESTS
+============================================
+En el campo Expression escribe:
+  rate(http_request_duration_seconds_sum[5m]) / rate(http_request_duration_seconds_count[5m])
+
+Esto te muestra el tiempo PROMEDIO de requests en los últimos 5 minutos.
+
+Resultado: 0.0125 = 12.5 milisegundos ✅ Muy rápido
+
+EJEMPLO 3: Ver REQUESTS POR ENDPOINT
+=====================================
+En el campo Expression escribe:
+  http_requests_total{uri=~"/api/cuentas.*"}
+
+Ves requests SOLO al endpoint /api/cuentas (y sus subrutas)
+
+EJEMPLO 4: Ver REQUESTS FALLIDOS (errores)
+===========================================
+En el campo Expression escribe:
+  http_requests_total{outcome="FAILURE"}
+
+Ves SOLO los requests que tuvieron error (400, 403, 500, etc)
+
+EJEMPLO 5: Ver USO DE MEMORIA
+==============================
+En el campo Expression escribe:
+  jvm_memory_used_bytes / 1024 / 1024
+
+Esto convierte bytes a MB.
+
+Resultado: ~250 = Tu app usa 250 MB de RAM ✅
+
+EJEMPLO 6: Ver CONEXIONES A LA BASE DE DATOS
+==============================================
+En el campo Expression escribe:
+  hikaricp_connections
+
+Ves cuántas conexiones activas tienes a Neon PostgreSQL.
+
+========================================
+METRICAS IMPORTANTES PARA MONITORING
+========================================
+
+DIARIAMENTE CHEQUEA:
+1. http_requests_total{outcome="FAILURE"} 
+   → Si sube mucho = hay errores en endpoints
+
+2. http_request_duration_seconds (percentile)
+   → Si sube mucho = app lenta
+
+3. jvm_memory_used_bytes
+   → Si sube constantemente sin bajar = memory leak
+
+4. hikaricp_connections
+   → Si llega a máximo (20) = necesitas más conexiones a DB
+
+========================================
+CONSULTAS AVANZADAS (PromQL)
+========================================
+
+¿CUANTOS REQUESTS LLEGO EN LA ULTIMA HORA?
+rate(http_requests_total[1h])
+
+¿CUAL ENDPOINT ES MAS LENTO?
+topk(5, rate(http_request_duration_seconds_sum[5m]) / rate(http_request_duration_seconds_count[5m]))
+
+¿CUANTOS ERRORES TUVIMOS HACE 10 MINUTOS?
+increase(http_requests_total{outcome="FAILURE"}[10m])
+
+========================================
+TABS EN PROMETHEUS
+========================================
+
+1. GRAPH Tab (recomendado)
+   - Muestra un gráfico visual
+   - Ve cómo cambió la métrica en el tiempo
+   - Muy útil para detectar picos
+
+2. TABLE Tab
+   - Muestra valores en tabla
+   - Útil para ver todos los valores
+
+========================================
+DATOS QUE TU APP GENERA PARA PROMETHEUS
+========================================
+
+Spring Boot automáticamente envía datos a:
+http://localhost:8080/actuator/prometheus
+
+Ahí están TODAS las métricas en formato:
+nombre_metrica{label1="valor1",label2="valor2"} 123
+
+Ejemplo real:
+http_requests_total{exception="None",method="POST",outcome="SUCCESS",status="201",uri="/api/cuentas"} 3
+
+========================================
+COMO CONECTAR PROMETHEUS A GRAFANA
+========================================
+
+Ya está hecho en docker-compose.yml
+
+Prometheus recolecta métricas
+        ↓
+Grafana las visualiza más bonito (http://localhost:3000)
+
+========================================
+RESUMEN
+========================================
+
+Prometheus = histórico de métricas de tu app
+Usa para:
+✅ Ver cuántos requests/segundo reciben tus endpoints
+✅ Detectar errores (4xx, 5xx)
+✅ Ver si la app está lenta
+✅ Detectar memory leaks
+✅ Monitorear conexiones a BD
+
+URLs importantes:
+- http://localhost:8080/actuator/prometheus → Métricas en crudo
+- http://localhost:9090 → UI de Prometheus (consultas)
+- http://localhost:3000 → Grafana (dashboards bonitos)
+
+========================================
+TUS ENDPOINTS EN PROMETHEUS
+========================================
+
+A medida que haces requests, Prometheus recolecta:
+
+POST /api/auth/register
+  → http_requests_total{uri="/api/auth/register",method="POST",...}
+
+POST /api/auth/login
+  → http_requests_total{uri="/api/auth/login",method="POST",...}
+
+POST /api/cuentas
+  → http_requests_total{uri="/api/cuentas",method="POST",...}
+
+GET /api/cuentas
+  → http_requests_total{uri="/api/cuentas",method="GET",...}
+
+POST /api/transacciones
+  → http_requests_total{uri="/api/transacciones",method="POST",...}
+
+GET /actuator/health
+  → http_requests_total{uri="/actuator/health",...}
+
+========================================
+INTENTA ESTO AHORA
+========================================
+
+1. Abre http://localhost:9090
+2. En "Expression" escribe: http_requests_total
+3. Click "Execute"
+4. Verás todas las métricas de requests que tú hiciste
+
+Si ves algo, ¡Prometheus funciona! 🎉
+
+========================================

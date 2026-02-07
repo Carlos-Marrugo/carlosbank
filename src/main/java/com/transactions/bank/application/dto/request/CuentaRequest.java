@@ -7,7 +7,6 @@ import java.math.BigDecimal;
 
 
 public class CuentaRequest {
-    @NotBlank(message = "El número de cuenta es obligatorio")
     private String numeroCuenta;
 
     @NotBlank(message = "El nombre del propietario es obligatorio")

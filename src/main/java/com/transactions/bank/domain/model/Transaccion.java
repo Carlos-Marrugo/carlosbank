@@ -19,17 +19,18 @@ public class Transaccion {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private TipoTransaccion tipo; // DEPOSITO, RETIRO, TRANSFERENCIA
+    private TipoTransaccion tipo;
 
     @Column(nullable = false)
     private BigDecimal monto;
 
     @Column(nullable = false)
+    @Builder.Default
     private LocalDateTime fecha = LocalDateTime.now();
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private EstadoTransaccion estado; // PENDIENTE, COMPLETADA, RECHAZADA
+    private EstadoTransaccion estado;
 
     @ManyToOne
     @JoinColumn(name = "cuenta_origen_id")

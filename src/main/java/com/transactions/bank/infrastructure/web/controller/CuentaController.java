@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/cuentas")
+@RequestMapping("/api/cuentas")
 public class CuentaController {
 
     private final CuentaService cuentaService;
@@ -35,6 +35,7 @@ public class CuentaController {
 
     @GetMapping("/{id}")
     public ResponseEntity<CuentaResponse> obtenerCuenta(@PathVariable Long id) {
+        java.util.Objects.requireNonNull(id);
         CuentaResponse cuenta = cuentaService.obtenerCuentaPorId(id);
         return ResponseEntity.ok(cuenta);
     }

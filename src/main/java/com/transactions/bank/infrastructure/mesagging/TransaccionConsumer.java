@@ -1,6 +1,6 @@
-package com.transactions.bank.mesagging;
+package com.transactions.bank.infrastructure.mesagging;
 
-import com.transactions.bank.config.RabbitMQConfig;
+import com.transactions.bank.infrastructure.config.RabbitMQConfig;
 import com.transactions.bank.domain.model.Cuenta;
 import com.transactions.bank.domain.model.EstadoTransaccion;
 import com.transactions.bank.domain.model.Transaccion;
@@ -24,6 +24,7 @@ public class TransaccionConsumer {
     @RabbitListener(queues = RabbitMQConfig.QUEUE_NAME)
     @Transactional
     public void procesarTransacciones(Long transaccionId) {
+        java.util.Objects.requireNonNull(transaccionId);
         Transaccion transaccion = transaccionRepository.findById(transaccionId)
                 .orElseThrow(() -> new RuntimeException("Transaccion no encontrada"));
 

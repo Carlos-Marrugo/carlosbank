@@ -1,0 +1,296 @@
+GUIA GRAFANA - DASHBOARDS VISUALES
+==================================
+
+¿QUE ES GRAFANA?
+================
+Grafana toma los datos de Prometheus y los muestra:
+- En gráficos bonitos
+- En dashboards interactivos
+- Con alertas automáticas
+- En tiempo real
+
+En simple: Prometheus recolecta datos, Grafana los muestra de forma bonita.
+
+========================================
+COMO ACCEDER
+========================================
+
+URL: http://localhost:3000
+Usuario: admin
+Contraseña: admin
+
+========================================
+PRIMER ACCESO - QUE VES
+========================================
+
+1. Login con admin / admin
+2. Te pedirá cambiar contraseña (puedes saltarlo)
+3. Verás el Home de Grafana
+
+En la izquierda tienes un menú con:
+- Dashboards
+- Explore
+- Settings
+- Data Sources
+
+========================================
+PASO 1: VERIFICA DATA SOURCE (DataSource)
+========================================
+
+1. Click en el ícono de engranaje (⚙️) en la izquierda
+2. Click en "Data Sources"
+3. Verás "Prometheus" ya conectado a http://prometheus:9090
+4. Click en "Prometheus"
+5. Verás un botón verde "Save & Test"
+
+Si ves "Data source is working" = Todo correcto ✅
+
+========================================
+PASO 2: CREAR TU PRIMER DASHBOARD
+========================================
+
+1. Click en el + (plus) en la izquierda
+2. Click en "Dashboard"
+3. Click en "+ Add a new panel"
+4. Verás un editor de panel
+
+========================================
+PASO 3: CREAR UN PANEL DE REQUESTS
+========================================
+
+En el panel editor:
+
+TITULO: "Total de Requests"
+
+En "Metrics" busca o escribe:
+  http_requests_total
+
+Verás opciones, selecciona:
+  http_requests_total
+
+Se mostrará un gráfico con todos tus requests.
+
+Para hacerlo más útil:
+- Click en "Stat" (rechaza la opción por defecto "Time series")
+- Verás un número grande con el total de requests
+
+Click "Apply" (arriba derecha)
+
+========================================
+PASO 4: AGREGAR MAS PANELS
+========================================
+
+Click "+ Add a new panel" de nuevo
+
+TITULO: "Requests por Endpoint"
+
+En Metrics escribe:
+  http_requests_total
+
+En la parte inferior, busca opciones de GROUP BY o agrupación.
+
+Esto te mostrará cuántos requests cada endpoint recibió.
+
+========================================
+PASO 5: PANEL DE TIEMPO DE RESPUESTA
+========================================
+
+Click "+ Add a new panel"
+
+TITULO: "Tiempo promedio de respuesta"
+
+En Metrics:
+  rate(http_request_duration_seconds_sum[5m]) / rate(http_request_duration_seconds_count[5m])
+
+En "Units" selectiona "milliseconds"
+
+Verás el tiempo promedio en ms. Si está en 50 ms = muy rápido ✅
+
+========================================
+PASO 6: PANEL DE MEMORIA
+========================================
+
+Click "+ Add a new panel"
+
+TITULO: "Uso de Memoria"
+
+En Metrics:
+  jvm_memory_used_bytes / 1024 / 1024
+
+En "Units" selectiona "megabytes"
+
+Verás cuántos MB usa tu app.
+
+========================================
+PASO 7: PANEL DE ERRORES
+========================================
+
+Click "+ Add a new panel"
+
+TITULO: "Requests con Error"
+
+En Metrics:
+  http_requests_total{outcome="FAILURE"}
+
+En "Visualization" selecciona "Stat"
+
+Si ves 0 = no hay errores ✅
+Si ves >0 = hay endpoints que fallan ❌
+
+========================================
+GUARDAR TU DASHBOARD
+========================================
+
+Click en "Save" (arriba derecha)
+
+Nombre: "Banking API Dashboard"
+
+Descripción: "Monitoreo de tu aplicación bancaria"
+
+Click "Save"
+
+========================================
+EXPLORAR METRICAS CON EXPLORE
+========================================
+
+1. Click en "Explore" (lupa) en la izquierda
+2. Selecciona "Prometheus" en Data Source
+3. En el campo de métrica tipea: http_requests_total
+4. Verás todas las métricas disponibles
+5. Haz click en una para verla
+
+Aquí puedes experimentar sin crear dashboards.
+
+========================================
+METRICAS IMPORTANTES PARA MONITOREAR
+========================================
+
+MÉTRICA 1: Total de Requests
+  http_requests_total
+  → Cuantos requests llegaron a tu app
+
+MÉTRICA 2: Requests por segundo
+  rate(http_requests_total[1m])
+  → Tráfico en tiempo real
+
+MÉTRICA 3: Tiempo de respuesta
+  http_request_duration_seconds
+  → Qué tan rápido responde cada endpoint
+
+MÉTRICA 4: Tasa de errores
+  http_requests_total{outcome="FAILURE"}
+  → Endpoints que fallan
+
+MÉTRICA 5: Uso de memoria
+  jvm_memory_used_bytes / 1024 / 1024
+  → MB de RAM que usa la app
+
+MÉTRICA 6: Conexiones a BD
+  hikaricp_connections
+  → Conexiones activas a Neon PostgreSQL
+
+========================================
+VARIABLES EN GRAFANA (FILTROS)
+========================================
+
+Puedes crear dropdowns para filtrar:
+
+En el editor de panel, click en "Add variable"
+
+Ejemplo:
+Variables > Add variable > Query
+
+Label: Endpoint
+Metric: label_values(http_requests_total, uri)
+
+Esto crea un dropdown con todos tus endpoints.
+
+Luego en Metrics puedes usar:
+  http_requests_total{uri="$endpoint"}
+
+Y cambiar el endpoint con el dropdown.
+
+========================================
+ALERTAS EN GRAFANA
+========================================
+
+Para crear una alerta (aún no necesario):
+
+1. En un panel, click en "Alert"
+2. Configura condición (ej: "si errores > 10")
+3. Configura notificación (ej: email, Slack)
+4. Grafana te notifica cuando se cumple la alerta
+
+Ejemplo:
+"Alertar si http_requests_total{outcome=FAILURE} > 50"
+
+========================================
+DASHBOARDS COMPARTIDOS
+========================================
+
+Grafana permite compartir dashboards:
+
+1. En tu dashboard, click en "Share"
+2. Click en "Export" para descargar como JSON
+3. En otro Grafana, click + > Import y usa ese JSON
+
+Útil si quieres compartir con tu equipo.
+
+========================================
+TEMAS Y PERSONALIZACION
+========================================
+
+1. Click en el ícono de usuario (arriba derecha)
+2. Selecciona "Preferences"
+3. Cambia tema a "Dark" (más bonito para monitoring)
+4. Guarda
+
+========================================
+REFERENCIAS RAPIDAS
+========================================
+
+Panel Type (Visualización):
+- Time series  → Gráfico de líneas (lo más común)
+- Stat         → Número grande (totales)
+- Gauge        → Marcador como velocímetro
+- Pie chart    → Gráfico de pastel
+- Table        → Tabla de datos
+
+========================================
+RESUMEN
+========================================
+
+Prometheus recolecta métricas
+       ↓
+Grafana las visualiza
+
+Para monitorear tu app:
+1. http://localhost:3000 (Grafana)
+2. Crea dashboards
+3. Observa tus endpoints en tiempo real
+4. Configura alertas si algo falla
+
+Dashboard importante para Banking API:
+✅ Total de requests
+✅ Requests por endpoint
+✅ Tiempo de respuesta
+✅ Tasa de errores
+✅ Uso de memoria
+✅ Conexiones a BD
+
+========================================
+EJEMPLO: Dashboard Completo en 5 minutos
+========================================
+
+1. Abre http://localhost:3000
+2. Login (admin / admin)
+3. Click + → Dashboard
+4. Panel 1: Métrica "http_requests_total" con Stat
+5. Panel 2: Métrica "http_requests_total{outcome=FAILURE}" con Stat
+6. Panel 3: Métrica "rate(http_request_duration_seconds_sum[5m]) / rate(http_request_duration_seconds_count[5m])" con Time series
+7. Panel 4: Métrica "jvm_memory_used_bytes / 1024 / 1024" con Time series
+8. Save
+
+¡Listo! Tienes un dashboard funcional ✅
+
+========================================

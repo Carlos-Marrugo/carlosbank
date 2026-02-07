@@ -7,6 +7,8 @@ import com.transactions.bank.domain.model.Cuenta;
 import com.transactions.bank.infrastructure.persistence.CuentaRepository;
 
 import jakarta.transaction.Transactional;
+import org.springframework.lang.NonNull;
+import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +37,9 @@ public class CuentaService {
 
     @Transactional
     public CuentaResponse crearCuenta(CuentaRequest request) {
+        if (request.getNumeroCuenta() == null || request.getNumeroCuenta().isBlank()) {
+            request.setNumeroCuenta(generarNumeroCuenta());
+        }
         if(cuentaRepository.findByNumeroCuenta(request.getNumeroCuenta())!=null){
             throw new CuentaExisteException("Esta cuenta ya esta registrada!");
         }
@@ -45,6 +50,7 @@ public class CuentaService {
                 .saldo(request.getSaldo())
                 .build();
 
+        Objects.requireNonNull(cuenta);
         cuentaRepository.save(cuenta);
 
         return convertirAResponse(cuenta);
@@ -57,12 +63,15 @@ public class CuentaService {
                 .collect(Collectors.toList());
     }
 
-    public CuentaResponse obtenerCuentaPorId(Long id) {
+    public CuentaResponse obtenerCuentaPorId(@NonNull Long id) {
+        Objects.requireNonNull(id);
         Cuenta cuenta = cuentaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("No existe el cuenta con el id: " + id));
         return  convertirAResponse(cuenta);
     }
 
-
+    private String generarNumeroCuenta() {
+        return "ACC-" + System.currentTimeMillis();
+    }
 
 }

@@ -1,4 +1,4 @@
-package com.transactions.bank.config;
+package com.transactions.bank.infrastructure.config;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -12,12 +12,13 @@ import java.security.Key;
 import java.util.Date;
 
 @Component
+@SuppressWarnings("deprecation")
 public class JwtTokenProvider {
 
-    @Value("${jwt-secret}")
+    @Value("${app.jwt.secret}")
     private String jwtSecret;
 
-    @Value("${jwt-expiration}")
+    @Value("${app.jwt.expiration}")
     private int jwtExpirationInMs;
 
     public String generarToken(Authentication authentication) {
@@ -35,10 +36,10 @@ public class JwtTokenProvider {
 
     public String obtenerUsernameDelJWT(String token) {
         Claims claims = Jwts.parser()
-                .setSigningKey(getSigningKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+            .setSigningKey(getSigningKey())
+            .build()
+            .parseClaimsJws(token)
+            .getBody();
         return claims.getSubject();
     }
 

@@ -2,7 +2,7 @@ package com.transactions.bank.application.services;
 
 import com.transactions.bank.application.dto.request.TransaccionRequest;
 import com.transactions.bank.application.dto.response.TransaccionResponse;
-import com.transactions.bank.domain.*;
+import java.util.Objects;
 import com.transactions.bank.domain.exceptions.CuentaNoEncontradaException;
 import com.transactions.bank.domain.exceptions.LimiteDiarioExcedidoException;
 import com.transactions.bank.domain.exceptions.SaldoInsuficienteException;
@@ -49,6 +49,7 @@ public class TransaccionService {
         validarTransaccion(request);
 
         Transaccion transaccion = crearTransaccionPendiente(request);
+        Objects.requireNonNull(transaccion);
         transaccionRepository.save(transaccion);
 
         rabbitTemplate.convertAndSend(exchangeName, routingKey, transaccion.getId());
@@ -56,7 +57,8 @@ public class TransaccionService {
         return convertirAResponse(transaccion);
     }
 
-    public TransaccionResponse obtenerTransaccionPorId(Long id) {
+    public TransaccionResponse obtenerTransaccionPorId(@org.springframework.lang.NonNull Long id) {
+        Objects.requireNonNull(id);
         Transaccion transaccion = transaccionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Transaccion no encontrada"));
         return convertirAResponse(transaccion);
@@ -71,7 +73,8 @@ public class TransaccionService {
 
     private void validarTransaccion(TransaccionRequest request) {
         if (request.getTipo() == TipoTransaccion.TRANSFERENCIA || request.getTipo() == TipoTransaccion.RETIRO) {
-            Cuenta cuentaOrigen = cuentaRepository.findById(request.getCuentaOrigenId())
+            Long origenId = Objects.requireNonNull(request.getCuentaOrigenId());
+            Cuenta cuentaOrigen = cuentaRepository.findById(origenId)
                     .orElseThrow(() -> new CuentaNoEncontradaException("Cuenta origen no encontrada"));
             validarSaldoSuficiente(cuentaOrigen, request.getMonto());
             validarLimiteDiario(cuentaOrigen, request.getMonto());
@@ -100,10 +103,10 @@ public class TransaccionService {
                 .tipo(request.getTipo())
                 .monto(request.getMonto())
                 .estado(EstadoTransaccion.PENDIENTE)
-                .cuentaOrigen(request.getCuentaOrigenId() != null ?
-                        cuentaRepository.getReferenceById(request.getCuentaOrigenId()) : null)
-                .cuentaDestino(request.getCuentaDestinoId() != null ?
-                        cuentaRepository.getReferenceById(request.getCuentaDestinoId()) : null)
+            .cuentaOrigen(request.getCuentaOrigenId() != null ?
+                cuentaRepository.getReferenceById(Objects.requireNonNull(request.getCuentaOrigenId())) : null)
+            .cuentaDestino(request.getCuentaDestinoId() != null ?
+                cuentaRepository.getReferenceById(Objects.requireNonNull(request.getCuentaDestinoId())) : null)
                 .build();
     }
 

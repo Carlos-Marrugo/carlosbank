@@ -3,9 +3,9 @@ spring:
     name: bank
 
   datasource:
-    url: jdbc:postgresql://${URL}
-    username: ${USER}
-    password: ${PASS}
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:bank}
+    username: ${DB_USER:postgres}
+    password: ${DB_PASS:postgres}
     driver-class-name: org.postgresql.Driver
     hikari:
       connection-timeout: 30000
@@ -19,11 +19,11 @@ spring:
     show-sql: true
 
   rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
-    connection-timeout: 5000
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USER:guest}
+    password: ${RABBITMQ_PASS:guest}
+    connection-timeout: ${RABBITMQ_CONNECTION_TIMEOUT:5000}
     template:
       exchange: transactions.exchange
       routing-key: transactions.routing.key
@@ -45,8 +45,8 @@ spring:
 
 app:
   jwt:
-    secret: ${JWT_SECRET}
-    expiration: ${JWT_EXPIRATION}
+    secret: ${JWT_SECRET:changeit}
+    expiration: ${JWT_EXPIRATION:3600000}
 
 management:
   endpoints:

@@ -1,7 +1,6 @@
 package com.transactions.bank.domain.model;
 
 import jakarta.persistence.*;
-import lombok.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -32,6 +31,7 @@ public class Cuenta {
     private BigDecimal saldo;
 
     @Column(name = "fecha_creacion")
+    @Builder.Default
     private LocalDateTime fechaCreacion = LocalDateTime.now();
 
     public void actualizarSaldo(BigDecimal monto, boolean esDeposito) {

@@ -8,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-
 @Service
 public class DataInitializer {
 
@@ -21,15 +19,13 @@ public class DataInitializer {
 
     @PostConstruct
     public void init() {
-        // Crear ADMIN (opcional)
-    /*
-        Usuario admin = new Usuario();
-        admin.setUsername("carlos.dev");
-
-
-        admin.setPassword(passwordEncoder.encode("carlos123"));
-
-        usuarioRepository.save(admin);*/
-
+        if (usuarioRepository.findByUsername("admin").isEmpty()) {
+            Usuario admin = Usuario.builder()
+                    .username("admin")
+                    .password(passwordEncoder.encode("admin123"))
+                    .build();
+            java.util.Objects.requireNonNull(admin);
+            usuarioRepository.save(admin);
+        }
     }
 }

@@ -1,0 +1,391 @@
+GUIA COMPLETA DE POSTMAN - BANKING API
+======================================
+
+BASE URL: http://localhost:8080
+
+========================================
+PASO 1: REGISTRAR USUARIO (SIN JWT)
+========================================
+
+Método: POST
+URL: http://localhost:8080/api/auth/register
+
+Headers:
+  Content-Type: application/json
+
+Body (raw - JSON):
+{
+  "username": "juan",
+  "password": "12345678"
+}
+
+Respuesta esperada (200 OK):
+{
+  "mensaje": "Usuario registrado exitosamente",
+  "jwtToken": "eyJhbGciOiJIUzUxMiJ9..."
+}
+
+⚠️ GUARDA EL TOKEN JWT PARA LOS SIGUIENTES PASOS
+
+========================================
+PASO 2: LOGIN (SIN JWT - ALTERNATIVO)
+========================================
+
+Método: POST
+URL: http://localhost:8080/api/auth/login
+
+Headers:
+  Content-Type: application/json
+
+Body (raw - JSON):
+{
+  "username": "juan",
+  "password": "12345678"
+}
+
+Respuesta esperada (200 OK):
+{
+  "mensaje": "Usuario autenticado",
+  "jwtToken": "eyJhbGciOiJIUzUxMiJ9..."
+}
+
+========================================
+PASO 3: CREAR CUENTA (CON JWT)
+========================================
+
+Método: POST
+URL: http://localhost:8080/api/cuentas
+
+Headers:
+  Authorization: Bearer {TU_JWT_AQUI}
+  Content-Type: application/json
+
+Body (raw - JSON):
+{
+  "propietario": "juan",
+  "saldo": 5000.00
+}
+
+⚠️ NOTA: El número de cuenta se genera AUTOMÁTICAMENTE
+        NO necesitas enviarlo en el Body
+
+Respuesta esperada (201 CREATED):
+{
+  "id": 1,
+  "propietario": "juan",
+  "saldo": 5000.00,
+  "numeroCuenta": "ACC-1707335401192",
+  "fechaCreacion": "2026-02-07T14:30:00"
+}
+
+========================================
+PASO 4: LISTAR CUENTAS (CON JWT)
+========================================
+
+Método: GET
+URL: http://localhost:8080/api/cuentas
+
+Headers:
+  Authorization: Bearer {TU_JWT_AQUI}
+  Content-Type: application/json
+
+Body: VACIO (no enviar body)
+
+Respuesta esperada (200 OK):
+[
+  {
+    "id": 1,
+    "propietario": "juan",
+    "saldo": 5000.00,
+    "numeroCuenta": "ACC-12345",
+    "fechaCreacion": "2026-02-07T14:30:00"
+  }
+]
+
+========================================
+PASO 5: OBTENER CUENTA POR ID (CON JWT)
+========================================
+
+Método: GET
+URL: http://localhost:8080/api/cuentas/1
+
+Headers:
+  Authorization: Bearer {TU_JWT_AQUI}
+  Content-Type: application/json
+
+Body: VACIO (no enviar body)
+
+Respuesta esperada (200 OK):
+{
+  "id": 1,
+  "propietario": "juan",
+  "saldo": 5000.00,
+  "numeroCuenta": "ACC-12345",
+  "fechaCreacion": "2026-02-07T14:30:00"
+}
+
+========================================
+PASO 6: CREAR TRANSACCION - DEPOSITO (CON JWT)
+========================================
+
+Método: POST
+URL: http://localhost:8080/api/transacciones
+
+Headers:
+  Authorization: Bearer {TU_JWT_AQUI}
+  Content-Type: application/json
+
+Body (raw - JSON):
+{
+  "tipo": "DEPOSITO",
+  "cuentaOrigenId": 1,
+  "monto": 500.00
+}
+
+Respuesta esperada (200 OK):
+{
+  "id": 1,
+  "tipo": "DEPOSITO",
+  "cuentaOrigen": 1,
+  "cuentaDestino": null,
+  "monto": 500.00,
+  "estado": "PENDIENTE",
+  "fecha": "2026-02-07T14:35:00"
+}
+
+========================================
+PASO 7: CREAR TRANSACCION - RETIRO (CON JWT)
+========================================
+
+Método: POST
+URL: http://localhost:8080/api/transacciones
+
+Headers:
+  Authorization: Bearer {TU_JWT_AQUI}
+  Content-Type: application/json
+
+Body (raw - JSON):
+{
+  "tipo": "RETIRO",
+  "cuentaOrigenId": 1,
+  "monto": 200.00
+}
+
+Respuesta esperada (200 OK):
+{
+  "id": 2,
+  "tipo": "RETIRO",
+  "cuentaOrigen": 1,
+  "cuentaDestino": null,
+  "monto": 200.00,
+  "estado": "PENDIENTE",
+  "fecha": "2026-02-07T14:36:00"
+}
+
+========================================
+PASO 8: CREAR TRANSACCION - TRANSFERENCIA (CON JWT)
+========================================
+
+Método: POST
+URL: http://localhost:8080/api/transacciones
+
+Headers:
+  Authorization: Bearer {TU_JWT_AQUI}
+  Content-Type: application/json
+
+Body (raw - JSON):
+{
+  "tipo": "TRANSFERENCIA",
+  "cuentaOrigenId": 1,
+  "cuentaDestinoId": 2,
+  "monto": 300.00
+}
+
+Respuesta esperada (200 OK):
+{
+  "id": 3,
+  "tipo": "TRANSFERENCIA",
+  "cuentaOrigen": 1,
+  "cuentaDestino": 2,
+  "monto": 300.00,
+  "estado": "PENDIENTE",
+  "fecha": "2026-02-07T14:37:00"
+}
+
+========================================
+PASO 9: OBTENER TRANSACCION POR ID (CON JWT)
+========================================
+
+Método: GET
+URL: http://localhost:8080/api/transacciones/1
+
+Headers:
+  Authorization: Bearer {TU_JWT_AQUI}
+  Content-Type: application/json
+
+Body: VACIO (no enviar body)
+
+Respuesta esperada (200 OK):
+{
+  "id": 1,
+  "tipo": "DEPOSITO",
+  "cuentaOrigen": 1,
+  "cuentaDestino": null,
+  "monto": 500.00,
+  "estado": "PENDIENTE",
+  "fecha": "2026-02-07T14:35:00"
+}
+
+========================================
+PASO 10: OBTENER TRANSACCIONES POR CUENTA (CON JWT)
+========================================
+
+Método: GET
+URL: http://localhost:8080/api/transacciones/by-cuenta/1
+
+Headers:
+  Authorization: Bearer {TU_JWT_AQUI}
+  Content-Type: application/json
+
+Body: VACIO (no enviar body)
+
+Respuesta esperada (200 OK):
+[
+  {
+    "id": 1,
+    "tipo": "DEPOSITO",
+    "cuentaOrigen": 1,
+    "cuentaDestino": null,
+    "monto": 500.00,
+    "estado": "PENDIENTE",
+    "fecha": "2026-02-07T14:35:00"
+  }
+]
+
+========================================
+PASO 11: HEALTH CHECK (SIN JWT)
+========================================
+
+Método: GET
+URL: http://localhost:8080/actuator/health
+
+Headers: NINGUNO
+
+Body: VACIO (no enviar body)
+
+Respuesta esperada (200 OK):
+{
+  "status": "UP"
+}
+
+========================================
+PASO 12: METRICAS PROMETHEUS (SIN JWT)
+========================================
+
+Método: GET
+URL: http://localhost:8080/actuator/prometheus
+
+Headers: NINGUNO
+
+Body: VACIO (no enviar body)
+
+Respuesta esperada (200 OK):
+[Texto con todas las métricas de prometheus]
+
+========================================
+COMO USAR EL TOKEN EN POSTMAN
+========================================
+
+Opción 1: MANUAL (Lo que hemos hecho)
+1. Copia el jwtToken de la respuesta de registro/login
+2. En Authorization tab, selecciona "Bearer Token"
+3. Pega el token en el campo de texto
+
+Opción 2: VARIABLE (Recomendado)
+1. Click en "Authorization" tab
+2. Type: Bearer Token
+3. Token: {{jwt_token}}
+4. En cada respuesta, usa el script:
+   pm.environment.set("jwt_token", pm.response.json().jwtToken);
+
+Opción 3: PRE-REQUEST SCRIPT (Automatizado)
+En el Pre-request Script de cualquier endpoint:
+```
+if (!pm.environment.get("jwt_token")) {
+  pm.sendRequest({
+    url: "http://localhost:8080/api/auth/register",
+    method: "POST",
+    header: {
+      "Content-Type": "application/json"
+    },
+    body: {
+      mode: "raw",
+      raw: JSON.stringify({
+        username: "testuser_" + Date.now(),
+        password: "Test@12345"
+      })
+    }
+  }, (err, response) => {
+    if (!err) {
+      const token = response.json().jwtToken;
+      pm.environment.set("jwt_token", token);
+    }
+  });
+}
+```
+
+========================================
+RESUMEN ENDPOINTS
+========================================
+
+PUBLICOS (NO requieren JWT):
+  POST   /api/auth/register        → Registra usuario
+  POST   /api/auth/login           → Obtiene JWT
+  GET    /actuator/health          → Health check
+  GET    /actuator/prometheus      → Métricas
+
+PROTEGIDOS (Requieren JWT):
+  POST   /api/cuentas              → Crea cuenta
+  GET    /api/cuentas              → Lista cuentas
+  GET    /api/cuentas/{id}         → Obtiene cuenta por ID
+  POST   /api/transacciones        → Crea transacción
+  GET    /api/transacciones/{id}   → Obtiene transacción por ID
+  GET    /api/transacciones/by-cuenta/{cuentaId} → Lista transacciones de una cuenta
+
+========================================
+TIPOS DE TRANSACCIONES
+========================================
+
+"tipo": "DEPOSITO"
+  - Requiere: cuentaOrigen, monto
+  - Efecto: Aumenta saldo
+
+"tipo": "RETIRO"
+  - Requiere: cuentaOrigen, monto
+  - Efecto: Disminuye saldo
+
+"tipo": "TRANSFERENCIA"
+  - Requiere: cuentaOrigen, cuentaDestino, monto
+  - Efecto: Transfiere de una cuenta a otra
+
+========================================
+ESTADOS DE TRANSACCION
+========================================
+
+PENDIENTE   → Recién creada, en cola de RabbitMQ
+COMPLETADA  → Procesada exitosamente
+RECHAZADA   → Falló (saldo insuficiente, etc)
+
+========================================
+CODIGOD DE RESPUESTA HTTP
+========================================
+
+200 OK                 → Operación exitosa (GET, POST, PUT)
+201 CREATED            → Recurso creado (POST)
+400 BAD REQUEST        → Datos inválidos
+401 UNAUTHORIZED       → Falta JWT o JWT inválido
+403 FORBIDDEN          → Autenticado pero sin permisos
+404 NOT FOUND          → Recurso no existe
+500 INTERNAL ERROR     → Error en servidor
+
+========================================

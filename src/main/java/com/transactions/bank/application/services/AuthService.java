@@ -3,7 +3,7 @@ package com.transactions.bank.application.services;
 import com.transactions.bank.application.dto.AuthRequest;
 import com.transactions.bank.application.dto.AuthResponse;
 import com.transactions.bank.application.dto.UsuarioRequest;
-import com.transactions.bank.config.JwtTokenProvider;
+import com.transactions.bank.infrastructure.config.JwtTokenProvider;
 import com.transactions.bank.domain.model.Usuario;
 import com.transactions.bank.infrastructure.persistence.UsuarioRepository;
 
@@ -42,6 +42,7 @@ public class AuthService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .build();
 
+        java.util.Objects.requireNonNull(usuario);
         usuarioRepository.save(usuario);
 
         return new AuthResponse(

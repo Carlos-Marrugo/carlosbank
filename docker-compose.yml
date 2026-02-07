@@ -12,6 +12,8 @@ services:
       - "15672:15672"
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - banco-network
 
   prometheus:
     image: prom/prometheus
@@ -20,14 +22,28 @@ services:
       - "9090:9090"
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    networks:
+      - banco-network
 
   grafana:
     image: grafana/grafana
     container_name: banco-grafana
     ports:
       - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
     depends_on:
       - prometheus
+    networks:
+      - banco-network
+
+networks:
+  banco-network:
+    driver: bridge
 
 volumes:
   rabbitmq_data:
+  postgres_data:

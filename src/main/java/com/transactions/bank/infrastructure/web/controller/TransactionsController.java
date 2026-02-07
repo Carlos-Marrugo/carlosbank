@@ -29,12 +29,13 @@ public class TransactionsController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TransaccionResponse> obtenerTransaccionPorId(@PathVariable Long Id) {
-        TransaccionResponse response = transaccionService.obtenerTransaccionPorId(Id);
+    public ResponseEntity<TransaccionResponse> obtenerTransaccionPorId(@PathVariable Long id) {
+        java.util.Objects.requireNonNull(id);
+        TransaccionResponse response = transaccionService.obtenerTransaccionPorId(id);
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/cuenta/{cuentaId}")
+    @GetMapping("/by-cuenta/{cuentaId}")
     public ResponseEntity<List<TransaccionResponse>> obtenerTransaccionesPorCuenta(@PathVariable Long cuentaId) {
         List<TransaccionResponse> responses = transaccionService.obtenerTransaccionesPorCuenta(cuentaId);
         return ResponseEntity.ok(responses);

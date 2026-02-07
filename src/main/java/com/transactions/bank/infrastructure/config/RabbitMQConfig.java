@@ -1,4 +1,4 @@
-package com.transactions.bank.config;
+package com.transactions.bank.infrastructure.config;
 
 import org.springframework.amqp.core.*;
 import org.springframework.context.annotation.Bean;
