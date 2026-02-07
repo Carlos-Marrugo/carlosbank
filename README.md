@@ -1,17 +1,31 @@
-# Sistema de Procesamiento de Transacciones Bancarias
+<p align="left">
+  <!-- Backend -->
+  <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/java/java-original.svg" alt="Java" width="50" height="50"/>
+  <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/spring/spring-original.svg" alt="Spring Boot" width="50" height="50"/>
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" alt="PostgreSQL" width="50" height="50"/>
 
-![Java](https://img.shields.io/badge/Java-21+-orange)
-![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.3-green)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue)
-![RabbitMQ](https://img.shields.io/badge/RabbitMQ-3.9-yellow)
-![Docker](https://img.shields.io/badge/Docker-20.10-blue)
-![License](https://img.shields.io/badge/License-MIT-blue)
 
-## Descripción
+  <!-- Queues -->
+  <img src="https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/rabbitmq.svg" alt="RabbitMQ" width="50" height="50"/>
+
+  <!-- Deployment -->
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-plain-wordmark.svg" alt="Docker Compose" width="50" height="50"/>
+
+  <!-- Monitoring -->
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/prometheus/prometheus-original.svg" alt="Prometheus" width="50" height="50"/>
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/grafana/grafana-original.svg" alt="Grafana" width="50" height="50"/>
+
+  <!-- Testing -->
+  <img src="https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/postman.svg" alt="Postman" width="50" height="50"/>
+
+  <!-- Others -->
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/maven/maven-original.svg" alt="Maven" width="50" height="50"/>
+</p>
+
+## Sistema de Procesamiento de Transacciones Bancarias
 
 El **Sistema de Procesamiento de Transacciones Bancarias** es un backend moderno desarrollado con **Spring Boot** que simula el núcleo de un sistema bancario. Permite gestionar cuentas bancarias y procesar transacciones (depósitos, retiros y transferencias) con validaciones en tiempo real, como verificación de saldos, límites diarios y detección básica de fraudes. Las transacciones se procesan de forma asíncrona usando **RabbitMQ**, garantizando escalabilidad y robustez. El sistema incluye autenticación con **JWT**, auditoría de operaciones y monitoreo con **Prometheus** y **Grafana**. Todo está implementado con herramientas **open source** para mantener los costos en cero, y la API se prueba con **Postman**.
 
-Este proyecto es ideal para demostrar habilidades avanzadas en desarrollo backend, diseño de sistemas financieros, arquitectura de microservicios y procesamiento asíncrono. Está diseñado con una **arquitectura hexagonal** para ser modular, testable y escalable.
 
 ## Características Principales
 
@@ -27,46 +41,15 @@ Este proyecto es ideal para demostrar habilidades avanzadas en desarrollo backen
 - **Pruebas**: Pruebas unitarias (JUnit), de integración (Testcontainers) y manuales con Postman.
 - **Documentación**: API documentada con Springdoc OpenAPI (Swagger UI).
 
-## Tecnologías Utilizadas
-
-- **Backend**:
-  - **Spring Boot 3.x**: Framework para la API RESTful y lógica de negocio.
-  - **Spring Web**: Endpoints REST.
-  - **Spring Data JPA**: Interacción con PostgreSQL.
-  - **Spring Security**: Autenticación con JWT.
-  - **Spring AMQP**: Procesamiento asíncrono con RabbitMQ.
-  - **Spring Boot Actuator**: Métricas de salud y rendimiento.
-- **Base de datos**:
-  - **PostgreSQL**: Almacenamiento de cuentas, transacciones y logs de auditoría.
-  - **H2 Database**: Base de datos embebida para pruebas.
-- **Colas**:
-  - **RabbitMQ**: Procesamiento asíncrono de transacciones.
-- **Despliegue local**:
-  - **Docker**: Contenedorización de servicios.
-  - **Docker Compose**: Orquestación de PostgreSQL, RabbitMQ, Prometheus y Grafana.
-- **Monitoreo**:
-  - **Prometheus**: Recolección de métricas.
-  - **Grafana**: Visualización de métricas.
-- **Pruebas**:
-  - **JUnit 5**: Pruebas unitarias.
-  - **MockMvc**: Pruebas de endpoints REST.
-  - **Testcontainers**: Pruebas de integración con contenedores.
-  - **Postman**: Pruebas manuales de la API.
-- **Documentación**:
-  - **Springdoc OpenAPI**: Documentación automática de la API.
-- **Otras herramientas**:
-  - **Java 17**: Lenguaje de programación.
-  - **Maven**: Gestión de dependencias.
-  - **Mockaroo**: Generación de datos de prueba.
-  - **Draw.io**: Diagramas de arquitectura.
-
 
 ## Arquitectura General
 
 ![upscalemedia-transformed](https://github.com/user-attachments/assets/1669f713-87eb-4f4f-a2c5-529dbdd31ba8)
 
-## Grafana dashboard showing a memory spike event detected at 16:41:
+## This is what a production incident looks like in Grafana:
 <img width="1600" height="758" alt="image" src="https://github.com/user-attachments/assets/68d61829-6727-495b-92f1-6ddaa69aa42e" />
+
+Captured during testing - shows JVM garbage collection and resource correlation.
 
 **Key observations:**
 - G1 Eden Space: Major GC triggered (drop from 70MB to ~0MB)
