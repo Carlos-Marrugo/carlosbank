@@ -60,41 +60,15 @@ Este proyecto es ideal para demostrar habilidades avanzadas en desarrollo backen
   - **Mockaroo**: Generación de datos de prueba.
   - **Draw.io**: Diagramas de arquitectura.
 
-## Arquitectura
-
-El sistema utiliza una **arquitectura hexagonal** para separar la lógica de negocio de la infraestructura, garantizando modularidad y testabilidad. Los componentes principales son:
-
-- **Controladores REST**: Exponen endpoints como `/api/accounts` y `/api/transactions`.
-- **Servicios**: Contienen la lógica de negocio (validaciones, procesamiento).
-- **Repositorios**: Gestionan el acceso a PostgreSQL.
-- **Adaptadores**: Conectan con RabbitMQ y PostgreSQL.
-- **Colas**: Procesan transacciones asíncronamente.
-- **Seguridad**: JWT para autenticación.
-- **Auditoría**: Registro de operaciones.
-- **Monitoreo**: Métricas con Spring Actuator, Prometheus y Grafana.
-
-### Flujo de una Transacción
-1. El cliente envía una solicitud a la API (por ejemplo, `POST /api/transactions`) con un token JWT.
-2. El controlador valida el token y pasa la solicitud al servicio.
-3. El servicio aplica validaciones (saldo, límites, fraudes) y encola la transacción en RabbitMQ.
-4. Un consumidor procesa la transacción, actualiza saldos en PostgreSQL y registra un log de auditoría.
-5. El cliente recibe un ID de transacción para seguimiento.
-
-
-## Requisitos
-
-- **Java 17+**
-- **Maven**
-- **Docker** y **Docker Compose**
-- **Postman** (plan gratuito)
-
-## Configuración del Proyecto
-
-1. **Clona el repositorio**:
-   ```bash
-   git clone <url-repositorio>
-   cd bank
 
 ## Arquitectura General
 
 ![upscalemedia-transformed](https://github.com/user-attachments/assets/1669f713-87eb-4f4f-a2c5-529dbdd31ba8)
+
+## Grafana dashboard showing a memory spike event detected at 16:41:
+<img width="1600" height="758" alt="image" src="https://github.com/user-attachments/assets/68d61829-6727-495b-92f1-6ddaa69aa42e" />
+
+**Key observations:**
+- G1 Eden Space: Major GC triggered (drop from 70MB to ~0MB)
+- Disk usage: Sudden increase coinciding with GC event
+- DB connections: Spike to 1 active connection during the event
