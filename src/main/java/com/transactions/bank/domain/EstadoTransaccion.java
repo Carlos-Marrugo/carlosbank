@@ -1,7 +1,8 @@
 package com.transactions.bank.domain;
 
 public enum EstadoTransaccion {
-    PENDIENTE,
+     PENDIENTE,
     COMPLETADA,
-    RECHAZADA
+    RECHAZADA,
+    EN_PROCESO
 }
